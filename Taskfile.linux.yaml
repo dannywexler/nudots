@@ -1,0 +1,71 @@
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+
+version: "3"
+
+vars:
+  MY_REPOS:
+    - dots2
+    - dots3
+
+tasks:
+  bootstrap_os:
+    platforms: ["linux"]
+    cmds:
+      - task: kitty_bootstrap
+      - task: home_folder_setup
+
+  sync_os:
+    cmds:
+      # - task: dconf_sync
+      # - task: kitty_sync
+      - task: fonts_sync
+
+  dconf_sync:
+    sources:
+      - ~/.config/dconf/my.conf
+    cmds:
+      - for: sources
+        cmd: dconf load / < {{ .ITEM }}
+
+  fonts_sync:
+    sources:
+      - ./fonts/*
+    cmds:
+      - mkdir -p ~/.local/share/fonts
+      - for: sources
+        cmd: ln -sf {{ joinPath .TASKFILE_DIR .ITEM }} ~/.local/share/fonts
+      - fc-cache -f ~/.local/share/fonts
+
+
+  kitty_bootstrap:
+    status:
+      - test -f ~/.local/bin/kitty
+      - test -f ~/.local/bin/kitten
+      - test -f ~/.local/share/applications/kitty.desktop
+    cmds:
+      - curl -fsSL https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin
+        launch=n
+      - ln -sf ~/.local/kitty.app/bin/kitty ~/.local/bin/
+      - ln -sf ~/.local/kitty.app/bin/kitten ~/.local/bin/
+
+  kitty_sync:
+    sources:
+      - ./packages/kitty/kitty.desktop
+    cmds:
+      - task: kitty_bootstrap
+      - for: sources
+        cmd: cp {{ .ITEM }} ~/.local/share/applications/kitty.desktop
+
+  nushell_bootstrap:
+    cmd: plugin use gstat
+
+  home_folder_setup:
+    cmds:
+      - rm -rf ~/Desktop
+      - rm -rf ~/Documents
+      - rm -rf ~/Downloads
+      - rm -rf ~/Music
+      - rm -rf ~/Pictures
+      - rm -rf ~/Videos
+      - mkdir -p ~/nas/archives
+      - mkdir -p ~/nas/media

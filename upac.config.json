@@ -1,0 +1,52 @@
+{
+    "packageManagers": {
+        "brew": {
+            "install": [
+                "install"
+            ]
+        },
+        "mise": {
+            "install": [
+                "use",
+                "--global"
+            ]
+        }
+    },
+    "profiles": {
+        "common": {
+            "packageManager": "mise",
+            "packages": {
+                "bun": {},
+                "fd": {},
+                "git": {},
+                "lazygit": {},
+                "node": {},
+                "ripgrep": {
+                    "binary": "rg"
+                }
+            }
+        },
+        "linux-brew": {
+            "packageManager": "brew",
+            "when": [
+                "{{os.isLinux}}"
+            ],
+            "packages": {
+                "dconf": {},
+                "kitty": {},
+                "nushell": {
+                    "binary": "nu"
+                }
+            }
+        },
+        "linux-mise": {
+            "packageManager": "mise",
+            "when": [
+                "{{os.isLinux}}"
+            ],
+            "packages": {
+                "yt-dlp": {}
+            }
+        }
+    }
+}

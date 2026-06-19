@@ -1,0 +1,33 @@
+version: "3"
+
+includes:
+  os_tasks:
+    taskfile: ./Taskfile.{{OS}}.yaml
+    flatten: true
+
+tasks:
+
+  bootstrap:
+    aliases: [bs]
+    cmds:
+      - task: bootstrap_os
+      - task: sync
+
+  sync:
+    aliases: [s]
+    cmds:
+      - cmd: upac s
+      - task: sync_os
+
+  gclone:
+    cmds:
+      - for: {var: MY_REPOS}
+        cmd: |
+          DEST={{ joinPath .TASKFILE_DIR ".." .ITEM }}
+          if [ -d $DEST ]; then
+            echo "{{ .ITEM }} already cloned"
+          else
+            echo "Cloning {{ .ITEM }}"
+            git clone https://github.com/dannywexler/{{ .ITEM }} $DEST
+            echo "Cloned {{ .ITEM }}"
+          fi

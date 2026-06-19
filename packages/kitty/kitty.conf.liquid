@@ -1,0 +1,6 @@
+shell /home/linuxbrew/.linuxbrew/bin/nu
+font_family family="{{ font.mono.family }}"
+font_size {{ font.mono.size }}
+{% for style in font.mono.styles -%}
+    font_features {{font.mono.name-}}-{{- style }} {% for feature in font.mono.features -%} {{feature[0]-}}={{-feature[1]}} {% endfor %}
+{% endfor %}
