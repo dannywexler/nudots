@@ -1,0 +1,17 @@
+# vim:ft=gitconfig
+
+[core]
+	autocrlf = input
+
+[credential]
+	helper = store
+
+[init]
+	defaultBranch = main
+
+[user]
+	name = Danny Wexler
+	email = danwex999@gmail.com
+
+[includeif "gitdir:C:/nn/"]
+	path = config_work
